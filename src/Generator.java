@@ -11,7 +11,6 @@ public class Generator {
     public int randomBetween(int end){
         Random random = new Random();
         liczbalosowa = random.nextInt(end);
-        //System.out.println(liczbalosowa);
         return liczbalosowa;
     }
 }

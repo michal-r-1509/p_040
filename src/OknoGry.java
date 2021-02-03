@@ -6,12 +6,21 @@ import java.awt.event.ActionListener;
 public class OknoGry extends JFrame implements ActionListener{
 
     private JLabel tyt1, tyt2, lkomp, lty, lwynkomp, lwyngracz, ldwukrop, komunikaty;
-    private JButton bkamien, bpapier, bnozyce;
+    private JButton bkamien, bpapier, bnozyce, breset;
     private int liczbagracza;
     int wynikkomp;
     int wynikgracz;
 
+    public void paint(Graphics g){
+        super.paint(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+        Grafika obrazek_kamienia = new Grafika();
+        obrazek_kamienia.draw(g2d);
+    }
+
     public OknoGry(){
+
         setLayout(null);
         setSize(410, 420);
         setTitle("Kamień, papier, nożyce");
@@ -32,19 +41,19 @@ public class OknoGry extends JFrame implements ActionListener{
         bkamien = new JButton("KAMIEŃ");
         bkamien.setBounds(30,80, 100, 100);
         bkamien.setFont(new Font("SansSerif", Font.BOLD, 16));
-        bkamien.addActionListener( this);
+        bkamien.addActionListener(this);
         add(bkamien);
 
         bpapier = new JButton("PAPIER");
         bpapier.setBounds(150,80, 100, 100);
         bpapier.setFont(new Font("SansSerif", Font.BOLD, 16));
-        bpapier.addActionListener( this);
+        bpapier.addActionListener(this);
         add(bpapier);
 
         bnozyce = new JButton("NOŻYCE");
         bnozyce.setBounds(270,80, 100, 100);
         bnozyce.setFont(new Font("SansSerif", Font.BOLD, 16));
-        bnozyce.addActionListener( this);
+        bnozyce.addActionListener(this);
         add(bnozyce);
 
         lkomp = new JLabel("KOMPUTER");
@@ -72,18 +81,22 @@ public class OknoGry extends JFrame implements ActionListener{
         ldwukrop.setFont(new Font("SansSerif", Font.BOLD, 20));
         add(ldwukrop);
 
+        breset = new JButton("Resetuj wyniki");
+        breset.setBounds(260,350, 120, 20);
+        breset.setFont(new Font("SansSerif", Font.BOLD, 12));
+        breset.addActionListener(new BresetListener());
+        add(breset);
+
         komunikaty = new JLabel("");
         komunikaty.setBounds(30,350, 380, 20);
         komunikaty.setFont(new Font("SansSerif", Font.BOLD, 12));
         add(komunikaty);
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object zrodlo = e.getSource();
-
-        Generator los = new Generator(1);
-        int liczbalosowa = los.randomBetween( 3);
 
         if(zrodlo == bkamien){
             liczbagracza = 0;}
@@ -92,8 +105,8 @@ public class OknoGry extends JFrame implements ActionListener{
         else if (zrodlo == bnozyce){
             liczbagracza = 2;}
 
-        //System.out.println(liczbagracza);
-        //System.out.println("komp: " + liczbalosowa + "    gracz: " + liczbagracza);
+        Generator los = new Generator(1);
+        int liczbalosowa = los.randomBetween( 3);
 
         Gra gra = new Gra(liczbalosowa, liczbagracza);
         int wyniki = gra.wynikGry();
@@ -105,11 +118,21 @@ public class OknoGry extends JFrame implements ActionListener{
             wynikkomp += 1;
             komunikaty.setText("Wygrywa komputer");
         }
-        else if (wyniki == 2){
+        else if (wyniki == 2) {
             wynikgracz += 1;
             komunikaty.setText("Wygrywa gracz");
         }
         lwynkomp.setText(String.valueOf(wynikkomp));
         lwyngracz.setText(String.valueOf(wynikgracz));
     }
+
+    public class BresetListener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            wynikgracz = 0;
+            wynikkomp = 0;
+            lwynkomp.setText(String.valueOf(wynikkomp));
+            lwyngracz.setText(String.valueOf(wynikgracz));
+        }
+    }
 }
+
