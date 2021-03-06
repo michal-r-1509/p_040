@@ -7,17 +7,9 @@ public class OknoGry extends JFrame implements ActionListener{
 
     private JLabel tyt1, tyt2, lkomp, lty, lwynkomp, lwyngracz, ldwukrop, komunikaty;
     private JButton bkamien, bpapier, bnozyce, breset;
-    private int liczbagracza;
+    private int liczbagracza, liczbalosowa;
     int wynikkomp;
     int wynikgracz;
-
-    public void paint(Graphics g){
-        super.paint(g);
-
-        Graphics2D g2d = (Graphics2D) g;
-        Grafika obrazek_kamienia = new Grafika();
-        obrazek_kamienia.draw(g2d);
-    }
 
     public OknoGry(){
 
@@ -82,16 +74,15 @@ public class OknoGry extends JFrame implements ActionListener{
         add(ldwukrop);
 
         breset = new JButton("Resetuj wyniki");
-        breset.setBounds(260,350, 120, 20);
+        breset.setBounds(260,360, 120, 20);
         breset.setFont(new Font("SansSerif", Font.BOLD, 12));
         breset.addActionListener(new BresetListener());
         add(breset);
 
         komunikaty = new JLabel("");
-        komunikaty.setBounds(30,350, 380, 20);
+        komunikaty.setBounds(30,360, 380, 20);
         komunikaty.setFont(new Font("SansSerif", Font.BOLD, 12));
         add(komunikaty);
-
     }
 
     @Override
@@ -106,7 +97,9 @@ public class OknoGry extends JFrame implements ActionListener{
             liczbagracza = 2;}
 
         Generator los = new Generator(1);
-        int liczbalosowa = los.randomBetween( 3);
+        liczbalosowa = los.randomBetween( 3);
+
+        repaint();
 
         Gra gra = new Gra(liczbalosowa, liczbagracza);
         int wyniki = gra.wynikGry();
@@ -132,7 +125,18 @@ public class OknoGry extends JFrame implements ActionListener{
             wynikkomp = 0;
             lwynkomp.setText(String.valueOf(wynikkomp));
             lwyngracz.setText(String.valueOf(wynikgracz));
+            komunikaty.setText(" ");
         }
     }
+
+    public void paint(Graphics g){
+        Grafika gr = new Grafika(liczbalosowa, liczbagracza);
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
+        gr.drawK(g2d);
+        gr.drawG(g2d);
+    }
 }
+
+/*kamien=0 papier=1 nozyce=2*/
 
